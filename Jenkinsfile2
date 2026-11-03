@@ -1,0 +1,54 @@
+pipeline {
+    agent {
+        label 'python-agent-template'
+    }
+
+    options {
+        skipDefaultCheckout(true)
+    }
+       stages {
+        stage('Checkout') {
+            steps {
+                echo 'Downloading Python project from GitHub'
+                checkout scm
+                sh 'ls -la'
+                  }
+               }
+        stage('Build') {
+            steps {
+                echo 'Building the Python application'
+
+                sh 'python3 -m compileall -q script1.py'
+                sh 'tar -czf python-app.tar.gz script1.py'
+            }
+        }
+
+         stage('Unit Testing') {
+                steps {
+                  echo 'Running Python unit tests'
+
+                   sh 'python3 -m pytest -v test_script2.py'
+                      }
+        }
+        stage('Run') {
+            steps {
+                echo 'Running the Python application'
+
+                sh 'python3 script1.py'
+            }
+        }
+         
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+            archiveArtifacts artifacts: 'python-app.tar.gz'
+        }
+
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
+        
