@@ -1,46 +1,48 @@
+
 pipeline {
-   agent any
+    agent {
+        label 'built-in'
+    }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Downloading Python project from GitHub'
-
                 git branch: 'main',
                     url: 'https://github.com/bassam2080/python_project.git'
             }
         }
 
+        stage('Setup Python') {
+            steps {
+                sh '''
+                    if command -v python3 >/dev/null 2>&1; then
+                        echo "Python3 is already installed"
+                        python3 --version
+                    else
+                        echo "Python3 is missing"
+                        echo "Install Python in the Jenkins execution environment"
+                        exit 1
+                    fi
+                '''
+            }
+        }
+
         stage('Build') {
             steps {
-                echo 'Checking Python application'
-
-                sh 'python3 --version'
                 sh 'python3 -m py_compile script1.py'
             }
         }
 
         stage('Run Script') {
             steps {
-                echo 'Running Python application'
-
                 sh 'python3 script1.py'
             }
         }
-    }
 
-    post {
-        always {
-            echo 'Cleaning workspace'
-            cleanWs()
-        }
-
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-
-        failure {
-            echo 'Pipeline failed!'
+        stage('Cleaning') {
+            steps {
+                echo 'Cleaning stage completed'
+            }
         }
     }
 }
