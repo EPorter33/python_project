@@ -37,7 +37,8 @@ pipeline {
                 steps {
                   echo 'Running Python unit tests'
 
-                   sh 'python3 -m pytest -v test_script2.py'
+                 //  sh 'python3 -m pytest -v test_script2.py'
+                      sh '.venv/bin/python -m pytest -v test_script2.py'
                       }
         }
         stage('Run') {
