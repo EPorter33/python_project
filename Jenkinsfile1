@@ -7,15 +7,7 @@ pipeline {
         skipDefaultCheckout(true)
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Downloading Python project from GitHub'
-
-                git branch: 'main',
-                    url: 'https://github.com/bassam2080/python_project.git'
-            }
-        }
+   
 
         stage('Build') {
             steps {
