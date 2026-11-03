@@ -58,6 +58,10 @@ pipeline {
 post {
         always {
             junit testResults: 'test-results/results.xml'
+                  skipPublishingChecks: true
+
+            archiveArtifacts artifacts: 'test-results/results.xml',
+                             allowEmptyArchive: true
         }
 
         failure {
