@@ -6,7 +6,8 @@ pipeline {
     options {
         skipDefaultCheckout(true)
     }
-   
+       stages {
+
         stage('Build') {
             steps {
                 echo 'Building the Python application'
@@ -36,3 +37,4 @@ pipeline {
         }
     }
 }
+        }
