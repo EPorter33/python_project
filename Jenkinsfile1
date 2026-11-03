@@ -25,7 +25,7 @@ pipeline {
                 sh 'python3 script1.py'
             }
         }
-    }
+    
 
     post {
         success {
