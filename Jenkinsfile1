@@ -1,0 +1,48 @@
+pipeline {
+    agent {
+        label 'python-agent-template'
+    }
+
+    options {
+        skipDefaultCheckout(true)
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Downloading Python project from GitHub'
+
+                git branch: 'main',
+                    url: 'https://github.com/bassam2080/python_project.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building the Python application'
+
+                sh 'python3 -m compileall -q script1.py'
+                sh 'tar -czf python-app.tar.gz script1.py'
+            }
+        }
+
+        stage('Run') {
+            steps {
+                echo 'Running the Python application'
+
+                sh 'python3 script1.py'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+            archiveArtifacts artifacts: 'python-app.tar.gz'
+        }
+
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
