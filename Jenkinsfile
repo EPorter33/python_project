@@ -6,7 +6,7 @@
             steps {
                 // pulls your repo
                 git branch: 'main',
-                    url: 'https://github.com/bassam2080/python_project.git'
+                    url: 'https://github.com/EPorter33/python_project.git'
             }
         }
 
