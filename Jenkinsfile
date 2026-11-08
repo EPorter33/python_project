@@ -1,38 +1,31 @@
- pipeline {
-    agent any
+pipeline {
+    agent { label 'python-agent-template' }
 
     stages {
         stage('Checkout') {
             steps {
-                // pulls your repo
-                git branch: 'main',
-                    url: 'https://github.com/EPorter33/python_project.git'
+                echo 'Downloading project from GitHub'
+                checkout scm
             }
         }
 
-        stage('Setup Python (dind)') {
+        stage('Build') {
             steps {
-                // if your Jenkins agent is like docker:dind (Alpine) and has no python
-                sh '''
-                  if ! command -v python3 >/dev/null 2>&1; then
-                    echo "Python3 not found, installing..."
-                    apk update
-                    apk add --no-cache python3 py3-pip
-                     ln -sf python3 /usr/bin/python || true
-                  fi
-                '''
+                sh 'python3 -m py_compile script1.py script2.py'
+                sh 'tar -czf python-app.tar.gz script1.py script2.py'
             }
         }
 
-        stage('Run script') {
+        stage('Run') {
             steps {
-                sh 'python3 script1.py'
+                sh 'python3 test_script3.py'
             }
         }
-             stage('cleaning') {
-            steps {
-               echo 'cleaning'
-            }
+    }
+
+    post {
+        success {
+            archiveArtifacts artifacts: 'python-app.tar.gz'
         }
     }
 }
